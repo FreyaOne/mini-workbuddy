@@ -2,6 +2,11 @@
     <img src="./logo.png" alt="mini-workbuddy" width="560">
 </div>
 
+<div align="center">
+    📚 在线阅读：
+    <a href="https://datawhalechina.github.io/mini-workbuddy/" target="_blank" style="text-decoration: none; color: #007bff; margin: 0 5px;"><strong>GitHub Pages</strong></a> |
+</div>
+
 ## 🚀 前言
 
 这个项目最初的样子，是一本 AgentScope 教程——按模块讲清每个 API 是什么、怎么调用。真开始写才发现，这样的内容在 AI 时代很难让人读完：框架文档本身已经足够完备，把问题丢给模型，得到的解释往往比教程更全。逐条讲解，无非是把文档重排一遍。
@@ -27,10 +32,10 @@
 | 项 | 要求 |
 |---|---|
 | Python | 3.11 及以上 |
-| AgentScope | **2.x**（`pip install "agentscope>=2,<3"`） |
-| 模型 | 任意兼容 OpenAI 接口的服务（DeepSeek、百炼、vLLM、GPUStack、Ollama 等） |
+| AgentScope | **2.x** |
+| 模型 | 任意兼容 OpenAI 接口的服务 |
 
-AgentScope 1.x 与 2.x 是两套不兼容的 API，网络上大量教程仍停留在 1.x（`ServiceToolkit`、`ReActAgent` 那一套），照抄会持续报错。本书以 2.0.5 为开发基线，个别小版本新增的能力（如 2.0.6 的 `on_check_permission` 钩子）在正文出现的那一处单独说明，各章不再重复标注版本号；完整的小版本差异见[第 15.3 节](./docs/15-毕业设计.md)。
+>AgentScope 1.x 与 2.x 是两套不兼容的 API，网络上大量教程仍停留在 1.x（`ServiceToolkit`、`ReActAgent` 那一套），照抄会持续报错。本书以 2.0.5 为开发基线，个别小版本新增的能力（如 2.0.6 的 `on_check_permission` 钩子）在正文出现的那一处单独说明，各章不再重复标注版本号；完整的小版本差异见[第 15.3 节](./docs/15-毕业设计.md)。
 
 ## 📖 内容导航
 
