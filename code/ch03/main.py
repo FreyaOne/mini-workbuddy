@@ -8,6 +8,7 @@
 
 import asyncio
 import os
+import sys
 from datetime import datetime
 
 from dotenv import load_dotenv
@@ -109,9 +110,17 @@ async def main() -> None:
     # 先整体放行，把注意力放在"工具能不能用起来"；第 7 章专门讲怎么管住它。
     agent.state.permission_context.mode = PermissionMode.BYPASS
 
+    # 让 shell 里的 python 一定是当前这个解释器。
+    # 别把绝对路径拼进命令里：Windows 路径带反斜杠，进 bash 会被当转义符；
+    # 加了引号又会被当成一个整体的命令名，照样找不到。
+    os.environ["PATH"] = os.path.dirname(sys.executable) + os.pathsep + os.environ.get("PATH", "")
+
     questions = [
         "现在几点？今天星期几？",
         "帮我数一下这句话有多少字：今天天气不错，适合写代码。",
+        # 第三问故意让它"写 + 跑"：一次触发 Write、Bash 两个工具。
+        "把 1 到 20 的 FizzBuzz 写成 fizz.py，"
+        "然后用 python fizz.py 跑一遍，把标准输出原样贴给我。",
     ]
 
     for question in questions:
