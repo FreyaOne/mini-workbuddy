@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mini-workbuddy</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- 左：会话列表 -->
+  <aside class="col col-left">
+    <div class="panel-head">
+      <h2>会话</h2>
+      <button id="btn-new">新建</button>
+    </div>
+    <div class="panel-body">
+      <div class="sessions" id="sessions"></div>
+    </div>
+  </aside>
+
+  <!-- 中：对话 -->
+  <main class="col col-mid">
+    <div class="mid-head">
+      <span class="title" id="session-title">未选择会话</span>
+      <span class="meta" id="conn"><span class="dot off"></span> 未连接</span>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="empty" id="empty">
+        <h3>开始一段对话</h3>
+        <p>这个助手能读写工作区里的文件，<br>危险操作会先问你一句。</p>
+        <div>
+          <span class="example" data-q="看看工作区里有哪些文件">看看工作区里有哪些文件</span>
+          <span class="example" data-q="帮我写文件，内容是今天的待办">帮我写一份待办</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="inner">
+        <div class="input-row">
+          <textarea id="input" rows="1" placeholder="说点什么，Enter 发送，Shift+Enter 换行"></textarea>
+          <button id="btn-stop" hidden>停止</button>
+          <button class="primary" id="btn-send">发送</button>
+        </div>
+        <div class="tips">
+          <span id="hint">Enter 发送</span>
+          <span id="status"></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 右：任务与统计 -->
+  <aside class="col col-right">
+    <div class="panel-head"><h2>本次运行</h2></div>
+    <div class="panel-body">
+      <div class="card">
+        <div class="hd"><span>任务清单</span><span id="task-count">0</span></div>
+        <div class="bd" id="tasks"><div style="font-size:12.5px;color:#9aa4b2;">暂无任务</div></div>
+      </div>
+
+      <div class="card">
+        <div class="hd"><span>用量</span></div>
+        <div class="bd">
+          <div class="stat"><span>模型调用</span><b id="s-calls">0</b></div>
+          <div class="stat"><span>工具调用</span><b id="s-tools">0</b></div>
+          <div class="stat"><span>输入 tokens</span><b id="s-in">0</b></div>
+          <div class="stat"><span>输出 tokens</span><b id="s-out">0</b></div>
+          <div class="stat"><span>本轮耗时</span><b id="s-time">—</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd"><span>注入与事件</span></div>
+        <div class="bd"><div class="log" id="log"></div></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

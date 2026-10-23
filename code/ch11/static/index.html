@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>mini-workbuddy · 第 11 章</title>
+<style>
+  body { font-family: "Microsoft YaHei", sans-serif; max-width: 760px; margin: 40px auto; color: #26303d; }
+  h1 { font-size: 20px; }
+  .bar { display: flex; gap: 8px; margin: 16px 0; }
+  input { flex: 1; padding: 8px 10px; border: 1px solid #d6dde8; border-radius: 6px; font-size: 14px; }
+  button { padding: 8px 14px; border: 1px solid #2c5bd4; background: #2c5bd4; color: #fff;
+    border-radius: 6px; cursor: pointer; font-size: 14px; }
+  button.ghost { background: #fff; color: #2c5bd4; }
+  #log { border: 1px solid #e4e8ee; border-radius: 8px; padding: 14px; min-height: 260px;
+    background: #fff; font-size: 14px; line-height: 1.7; white-space: pre-wrap; }
+  #events { margin-top: 12px; font-family: Consolas, monospace; font-size: 11px;
+    color: #8b96a5; max-height: 180px; overflow: auto; }
+  .hint { font-size: 12px; color: #8b96a5; }
+</style>
+</head>
+<body>
+<h1>第 11 章 · SSE 最小验证页</h1>
+<p class="hint">这个页面只验证"事件能不能流到浏览器"，界面在第 12 章重做。</p>
+
+<div class="bar">
+  <input id="text" value="你好，介绍一下你自己" placeholder="输入一句话">
+  <button onclick="send()">发送</button>
+  <button class="ghost" onclick="newSession()">新会话</button>
+</div>
+
+<div id="log"></div>
+<div id="events"></div>
+
+<script>
+let sessionId = null;
+let source = null;
+
+async function newSession() {
+  const res = await fetch('/api/sessions', { method: 'POST' });
+  const data = await res.json();
+  sessionId = data.session_id;
+  document.getElementById('log').textContent = '';
+  document.getElementById('events').textContent = '';
+  if (source) source.close();
+  source = new EventSource(`/api/stream/${sessionId}`);
+  source.onmessage = (e) => append(JSON.parse(e.data));
+  // 具名事件需要逐个注册
+  ['REPLY_START','TEXT_BLOCK_DELTA','TEXT_BLOCK_END','TOOL_CALL_START','TOOL_RESULT_END',
+   'REQUIRE_USER_CONFIRM','REPLY_END','done','error','MODEL_CALL_END','HINT_BLOCK']
+    .forEach(type => source.addEventListener(type, (e) => handle(type, JSON.parse(e.data))));
+  document.getElementById('events').textContent = `会话 ${sessionId}`;
+}
+
+function handle(type, data) {
+  const log = document.getElementById('log');
+  const dump = document.getElementById('events');
+  dump.textContent = `${type} ${JSON.stringify(data).slice(0, 120)}\n` + dump.textContent;
+
+  if (type === 'TEXT_BLOCK_DELTA') log.textContent += data.delta || '';
+  else if (type === 'TOOL_CALL_START') log.textContent += `\n[调用工具] ${data.tool_call_name}\n`;
+  else if (type === 'REQUIRE_USER_CONFIRM') log.textContent += '\n[需要确认，本页暂不处理]\n';
+  else if (type === 'error') log.textContent += `\n[错误] ${data.message}\n`;
+}
+
+function append() {}
+
+async function send() {
+  if (!sessionId) await newSession();
+  const text = document.getElementById('text').value;
+  await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: sessionId, text }),
+  });
+}
+
+document.getElementById('text').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') send();
+});
+</script>
+</body>
+</html>

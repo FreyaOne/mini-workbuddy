@@ -1,50 +1,26 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
-  name: "Datawhale开源教程"
-  text: "AI前沿知识开源教程"
-  tagline: 开始学起来吧~
+  name: "mini-workbuddy"
+  text: "用 AgentScope 从零搭一个本地智能体工作台"
+  tagline: 15 章、5 篇。从「模型 + 循环 + 工具」三行公式开始，一路做到能在浏览器里跑、会读文件、会征求你同意、会算自己花了多少钱的完整产品。
   image:
-    src: /learning.GIF
-    alt: Datawhale开源教程
+    src: /logo-full.png
+    alt: mini-workbuddy
   actions:
     - theme: brand
       text: 开始学习
-      link: /chapter1/
+      link: /01-我们究竟要造什么
+    - theme: alt
+      text: 看源码
+      link: https://github.com/muxiaoxiong/mini-workbuddy
 
 features:
-  - title: 💥 前沿
-    details: 紧跟技术发展输出最前沿的知识
-  - title: 🎁 免费
-    details: 无任何形式的收费
-  - title: 🌐 开源
-    details: 教程和代码源文件全部托管在GitHub
+  - title: 按产品讲，不按 API 讲
+    details: 每加一块能力，先回答「为什么现在需要它」。概念在真正被用到的那一刻出场，而不是照着文档目录罗列一遍。
+  - title: 15 章全部可运行
+    details: 第 1–10 章每章一个单文件，python main.py 直接跑；第 11 章起前后端一起跑，每章代码独立可 diff。
+  - title: 踩过的坑都写进去了
+    details: 上下文撑爆、会话恢复残留、SSE 断线重连、EventSource 自杀式重连——这些不是理论，是实跑出来的。
 ---
-<script setup>
-import { VPTeamMembers } from 'vitepress/theme'
-
-const members = [
-  {
-    avatar: 'https://www.github.com/Sm1les.png',
-    name: 'Sm1les',
-    title: '项目负责人',
-    links: [
-      { icon: 'github', link: 'https://github.com/Sm1les' },
-    ]
-  },
-  {
-    avatar: 'https://www.github.com/Sm1les.png',
-    name: '马里奥',
-    title: '核心贡献者',
-    links: [
-      { icon: 'github', link: 'https://github.com/Sm1les' },
-    ]
-  }
-]
-</script>
-
-
-<h2 align="center">Team</h2>
-<VPTeamMembers size="small" :members />

@@ -1,70 +1,108 @@
 import { defineConfig } from 'vitepress'
-// https://vitepress.dev/reference/site-config
 
-// 1. 获取环境变量并判断
-// 如果环境变量 EDGEONE 等于 '1'，说明在 EdgeOne 环境，使用根路径 '/'
-// 否则默认是 GitHub Pages 环境，使用仓库子路径 '/easy-vecdb/'
+// 部署基线：
+// - GitHub Pages 项目站点，路径前缀固定为仓库名
+// - 若在 EdgeOne 等根路径环境部署，设置环境变量 EDGEONE=1 即可切到 '/'
 const isEdgeOne = process.env.EDGEONE === '1'
-const baseConfig = isEdgeOne ? '/' : '/repo-template/'
+const baseConfig = isEdgeOne ? '/' : '/mini-workbuddy/'
 
 export default defineConfig({
   lang: 'zh-CN',
-  title: "Datawhale开源教程",
-  description: "AI前沿知识开源教程",
+  title: 'mini-workbuddy',
+  description: '用 AgentScope 2.x 从零搭一个本地智能体工作台',
   base: baseConfig,
+  srcExclude: ['**/README.md'],
   markdown: {
     math: true
   },
   themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    logo: '/datawhale-logo.png',
+    logo: '/logo.png',
+
     nav: [
-      { text: 'PDF版本下载', link: 'https://github.com/datawhalechina/repo-template/releases' },
+      { text: '开始学习', link: '/01-我们究竟要造什么' },
+      { text: '附录', link: '/A-附录' },
+      { text: 'GitHub', link: 'https://github.com/muxiaoxiong/mini-workbuddy' },
     ],
+
     search: {
       provider: 'local',
       options: {
         translations: {
-          button: {
-            buttonText: '搜索文档',
-            buttonAriaLabel: '搜索文档'
-          },
+          button: { buttonText: '搜索文档', buttonAriaLabel: '搜索文档' },
           modal: {
-            noResultsText: '无法找到相关结果',
-            resetButtonTitle: '清除查询条件',
-            footer: {
-              selectText: '选择',
-              navigateText: '切换'
-            }
+            noResultsText: '没有找到相关内容',
+            resetButtonTitle: '清除条件',
+            footer: { selectText: '选择', navigateText: '切换' }
           }
         }
       }
     },
+
     sidebar: [
       {
+        text: '第 0 篇 · 开场',
         items: [
-          { text: '第1章：第1章的标题', link: '/chapter1/' },
-          { text: '第2章：第2章的标题', 
-            items: [
-              { text: '第2.1节：第2.1节的标题', link: '/chapter2/chapter2_1' },
-              { text: '第2.2节：第2.2节的标题', link: '/chapter2/chapter2_2' }
-            ]
-           }
+          { text: '第 1 章　我们究竟要造什么', link: '/01-我们究竟要造什么' },
+          { text: '第 2 章　读懂一次对话', link: '/02-读懂一次对话' },
         ]
-      }
+      },
+      {
+        text: '第 1 篇 · 从会说话到会干活',
+        items: [
+          { text: '第 3 章　给它一双手', link: '/03-给它一双手' },
+          { text: '第 4 章　解剖 ReAct 循环', link: '/04-解剖ReAct循环' },
+          { text: '第 5 章　装进一个工作区', link: '/05-装进一个工作区' },
+          { text: '第 6 章　工具不够用就自己造', link: '/06-工具不够用就自己造' },
+        ]
+      },
+      {
+        text: '第 2 篇 · 让它可靠',
+        items: [
+          { text: '第 7 章　别让它乱删东西', link: '/07-别让它乱删东西' },
+          { text: '第 8 章　长任务不迷路', link: '/08-长任务不迷路' },
+          { text: '第 9 章　会话要活下去', link: '/09-会话要活下去' },
+          { text: '第 10 章　在关键节点插手', link: '/10-在关键节点插手' },
+        ]
+      },
+      {
+        text: '第 3 篇 · 做成人能用的产品',
+        items: [
+          { text: '第 11 章　后端把事件流出去', link: '/11-后端把事件流出去' },
+          { text: '第 12 章　前端把事件拼成界面', link: '/12-前端把事件拼成界面' },
+          { text: '第 13 章　交互闭环', link: '/13-交互闭环' },
+          { text: '第 14 章　日志、成本与可观测', link: '/14-日志成本与可观测' },
+        ]
+      },
+      {
+        text: '第 4 篇 · 收尾',
+        items: [
+          { text: '第 15 章　毕业设计：从 mini 到真的', link: '/15-毕业设计' },
+        ]
+      },
+      {
+        text: '附录',
+        items: [
+          { text: '附录 A　环境与模型接入速查', link: '/A-附录' },
+        ]
+      },
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/datawhalechina/repo-template' }
+      { icon: 'github', link: 'https://github.com/muxiaoxiong/mini-workbuddy' }
     ],
 
     editLink: {
-      pattern: 'https://github.com/datawhalechina/repo-template/blob/main/docs/:path'
+      pattern: 'https://github.com/muxiaoxiong/mini-workbuddy/blob/main/docs/:path',
+      text: '在 GitHub 上编辑此页'
     },
 
+    outline: { level: [2, 3], label: '本页目录' },
+
+    docFooter: { prev: '上一章', next: '下一章' },
+
     footer: {
-      message: '<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备2026002630号-1</a> | <a href="https://beian.mps.gov.cn/#/query/webSearch?code=11010602202215" rel="noreferrer" target="_blank">京公网安备11010602202215号</a>',
-      copyright: '本作品采用 <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议（CC BY-NC-SA 4.0）</a> 进行许可'
+      message: '教程正文采用 CC BY-NC-SA 4.0 许可，<code>code/</code> 下示例代码可自由使用',
+      copyright: 'mini-workbuddy'
     }
   }
 })

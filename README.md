@@ -1,57 +1,112 @@
-<h1 align="center"> 项目名称（⚠️ Alpha内测版 / 🧪 Beta公测版） </h1>
-
-> [!CAUTION]
-> ⚠️ Alpha内测版本警告：此为早期内部构建版本，尚不完整且可能存在错误，欢迎大家提Issue反馈问题或建议。
-
-或者
-
-> [!WARNING]
-> 🧪 Beta公测版本提示：教程主体已完成，正在优化细节，欢迎大家提Issue反馈问题或建议。
-
-*这里写项目的各类介绍信息、背景、动机等内容*
-
-## 项目受众
-
-*注：这里写你的项目所面向的受众，本项目能给他们带来什么，对他们的基础能力要求有哪些*
-
-## 在线阅读
-https://datawhalechina.github.io/repo-template
-
-## 目录
-*这里写你的项目目录，及其完成状态，已完成的部分添加上跳转链接*
-
-|  章节名   | 简介 | 状态 |
-|  ----  | ---- | ---- |
-| [第1章 xxx](https://github.com/datawhalechina/repo-template/blob/main/docs/chapter1)  | xxx | ✅ |
-| [第2章 xxx](https://github.com/datawhalechina/repo-template/blob/main/docs/chapter2)  | xxx | ✅ |
-| [第3章 xxx](https://github.com/datawhalechina/repo-template/blob/main/docs/chapter3)  | xxx | ✅ |
-| 第4章  | xxx | 🚧 |
-
-## 贡献者名单
-
-| 姓名 | 职责 | 简介 |
-| :----| :---- | :---- |
-| 小明 | 项目负责人 | 一个理想主义者 |
-| 小红 | 第1章贡献者 | 小明的朋友 |
-| 小强 | 第2章贡献者 | 小明的朋友 |
-
-*注：表头可自定义，但必须在名单中标明项目负责人*
-
-## 参与贡献
-
-- 如果你发现了一些问题，可以提Issue进行反馈，如果提完没有人回复你可以联系[保姆团队](https://github.com/datawhalechina/DOPMC/blob/main/OP.md)的同学进行反馈跟进~
-- 如果你想参与贡献本项目，可以提Pull Request，如果提完没有人回复你可以联系[保姆团队](https://github.com/datawhalechina/DOPMC/blob/main/OP.md)的同学进行反馈跟进~
-- 如果你对 Datawhale 很感兴趣并想要发起一个新的项目，请按照[Datawhale开源项目指南](https://github.com/datawhalechina/DOPMC/blob/main/GUIDE.md)进行操作即可~
-
-## 关注我们
-
-<div align=center>
-<p>扫描下方二维码关注公众号：Datawhale</p>
-<img src="https://raw.githubusercontent.com/datawhalechina/pumpkin-book/master/res/qrcode.jpeg" width = "180" height = "180">
+<div align="center">
+    <img src="./logo.png" alt="mini-workbuddy" width="560">
 </div>
 
-## LICENSE
+## 🚀 前言
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可。
+这个项目最初的样子，是一本 AgentScope 教程——按模块讲清每个 API 是什么、怎么调用。真开始写才发现，这样的内容在 AI 时代很难让人读完：框架文档本身已经足够完备，把问题丢给模型，得到的解释往往比教程更全。逐条讲解，无非是把文档重排一遍。
 
-*注：默认使用CC 4.0协议，也可根据自身项目情况选用其他协议*
+那什么才是这个项目给学习者能带来的东西？
+
+本书仍然以理解 AgentScope 为目的，但入口不是 API，而是产品——主线定为：用 AgentScope 尽可能完整地做出一个类似 WorkBuddy 的本地助手。概念在需要它的时候出场：模型怎么接、消息长什么样、工具怎么注册、循环替你转了几圈、权限在哪一层拦、状态存在哪。每加一块能力，都先回答"为什么现在需要它"。
+
+框架是学不完的，判断力是练出来的。这才是本项目真正想留下的东西。
+
+## 📌 项目受众
+
+面向会写 Python 函数和类、见过 `async/await`的读者。高校学生、想把手上的脚本做成产品的开发者、需要给团队讲清"智能体到底怎么运转"的工程师，都能从中拿到可复用的东西。
+
+**前置知识要求：**
+
+- 会用 Python 写函数与类，能读懂类型注解
+- 知道 `async` / `await` 的作用（不要求写过多协程）
+- 有大模型的基本使用经验：发过 API 请求、知道 token 是什么
+
+## ⚙️ 运行环境
+
+| 项 | 要求 |
+|---|---|
+| Python | 3.11 及以上 |
+| AgentScope | **2.x**（`pip install "agentscope>=2,<3"`） |
+| 模型 | 任意兼容 OpenAI 接口的服务（DeepSeek、百炼、vLLM、GPUStack、Ollama 等） |
+
+AgentScope 1.x 与 2.x 是两套不兼容的 API，网络上大量教程仍停留在 1.x（`ServiceToolkit`、`ReActAgent` 那一套），照抄会持续报错。本书以 2.0.5 为开发基线，个别小版本新增的能力（如 2.0.6 的 `on_check_permission` 钩子）在正文出现的那一处单独说明，各章不再重复标注版本号；完整的小版本差异见[第 15.3 节](./docs/15-毕业设计.md)。
+
+## 📖 内容导航
+
+五篇 15 章，每章 3000–4000 字，读完一章约 20 分钟。
+
+| 章节 | 关键内容 | 代码 | 状态 |
+|---|---|---|---|
+| <strong>第 0 篇 · 开场：先看成品，再动手</strong> | | | |
+| [第 1 章 我们究竟要造什么](./docs/01-我们究竟要造什么.md) | Agent = 模型 + 循环 + 工具；环境搭建；跑通第一条消息 | `ch01` | ✅ |
+| [第 2 章 读懂一次对话](./docs/02-读懂一次对话.md) | Msg / Block / Event；`reply` 与 `reply_stream` | `ch02` | ✅ |
+| <strong>第 1 篇 · 从会说话到会干活</strong> | | | |
+| [第 3 章 给它一双手](./docs/03-给它一双手.md) | 工具调用、Toolkit、JSON Schema 从哪来 | `ch03` | ✅ |
+| [第 4 章 解剖 ReAct 循环](./docs/04-解剖ReAct循环.md) | 裸循环与框架循环的对比；事件全景；迭代上限 | `ch04` | ✅ |
+| [第 5 章 装进一个工作区](./docs/05-装进一个工作区.md) | `LocalWorkspace`；路径边界；先读后写 | `ch05` | ✅ |
+| [第 6 章 工具不够用就自己造](./docs/06-工具不够用就自己造.md) | `ToolBase` 四件套；工具组与元工具 | `ch06` | ✅ |
+| <strong>第 2 篇 · 让它可靠</strong> | | | |
+| [第 7 章 别让它乱删东西](./docs/07-别让它乱删东西.md) | 权限模式 × 规则 × 工具自检；人在环确认 | `ch07` | ✅ |
+| [第 8 章 长任务不迷路](./docs/08-长任务不迷路.md) | 任务清单；上下文压缩与卸载；注入配置 | `ch08` | ✅ |
+| [第 9 章 会话要活下去](./docs/09-会话要活下去.md) | `AgentState` 落盘与恢复；恢复时的两个陷阱 | `ch09` | ✅ |
+| [第 10 章 在关键节点插手](./docs/10-在关键节点插手.md) | 中间件洋葱；结构化输出做任务分级 | `ch10` | ✅ |
+| <strong>第 3 篇 · 做成人能用的产品</strong> | | | |
+| [第 11 章 后端把事件流出去](./docs/11-后端把事件流出去.md) | FastAPI + SSE；事件到帧的映射；断线续传 | `ch11` | ✅ |
+| [第 12 章 前端把事件拼成界面](./docs/12-前端把事件拼成界面.md) | reducer 拼装；工具时间线；流式渲染 | `ch12` | ✅ |
+| [第 13 章 交互闭环](./docs/13-交互闭环.md) | 确认、提问、中断；回执如何续跑 | `ch13` | ✅ |
+| [第 14 章 日志、成本与可观测](./docs/14-日志成本与可观测.md) | 事件流记账；成本面板；上线清单 | `ch14` | ✅ |
+| <strong>第 4 篇 · 收尾</strong> | | | |
+| [第 15 章 毕业设计：从 mini 到真的](./docs/15-毕业设计.md) | 六项自检；三条升级路线；版本对照表 | `ch15` | ✅ |
+| <strong>附录</strong> | | | |
+| [附录 A 环境与模型接入速查](./docs/A-附录.md) | 各家 `base_url`、常见报错对照、成本估算 | — | ✅ |
+| [附录 B 事件类型全表](./docs/A-附录.md) | 28 个事件：触发时机与前端渲染方式 | — | ✅ |
+| [附录 C 章节索引](./docs/A-附录.md) | 章 × 代码 × 新概念；想改某处去哪个文件 | — | ✅ |
+
+## 🗂 目录结构
+
+```
+mini-workbuddy/
+├── docs/                      # 教程正文，一章一个 Markdown（全部平铺）
+│   ├── 01-…15-*.md
+│   ├── A-附录.md
+│   ├── index.md               # 在线阅读站点首页
+│   ├── assets/                # 配图，按章分目录
+│   │   ├── chNN/*.png
+│   │   └── src/*.html         # 概念图的 HTML 源文件，改字重截即可
+│   ├── public/                # 站点静态资源（logo 等）
+│   └── .vitepress/            # VitePress 配置与主题
+├── code/                      # 逐章代码，每章目录独立可跑
+│   ├── .env.example
+│   ├── ch01/main.py           # 第 1–10 章都是单文件，方便 diff
+│   └── …ch15/checkup.py
+├── .github/workflows/         # 推送 main 自动构建并发布到 GitHub Pages
+└── package.json               # VitePress 依赖与文档站脚本
+```
+
+本地预览文档站：
+
+```bash
+npm install
+npm run docs:dev        # http://localhost:5173/mini-workbuddy/
+npm run docs:build      # 产物在 docs/.vitepress/dist
+```
+
+
+设计原则：
+
+1. 第 1–10 章每章一个**单文件**，`python main.py` 直接跑
+2. 第 11 章之后才拆包，因为前端必须和后端一起跑
+3. 每章代码顶部三行注释写清"比上一章多了什么"
+4. 主线不引入数据库与 Redis：第 9 章用 JSON 文件，Redis 方案只在升级路线里提
+
+## 🧑‍💻 参与贡献
+
+- 发现错误或表述不清：提 Issue，附上章节号与实际看到的输出。
+- 想补充内容或修正代码：提 Pull Request，一章一个提交，便于逐章审阅。
+- 新增配图请遵循既有视觉规范：浅色底、1200 像素宽、源文件放 `assets/src/`，命名 `<章号>-<主题>.html`。
+
+## 📄 许可
+
+教程正文采用 [CC BY-NC-SA 4.0](http://creativecommons.org/licenses/by-nc-sa/4.0/) 许可：署名、非商业性使用、相同方式共享。
+`code/` 下的示例代码可自由用于学习与商业项目，无需署名。
