@@ -83,6 +83,8 @@ export default defineConfig({
         text: '附录',
         items: [
           { text: '附录 A　环境与模型接入速查', link: '/A-附录' },
+          { text: '附录 B　事件类型全表', link: '/A-附录#附录-b-事件类型全表' },
+          { text: '附录 C　章节索引', link: '/A-附录#附录-c-章节索引' },
         ]
       },
     ],
