@@ -102,11 +102,30 @@ npm run docs:build      # 产物在 docs/.vitepress/dist
 3. 每章代码顶部三行注释写清"比上一章多了什么"
 4. 主线不引入数据库与 Redis：第 9 章用 JSON 文件，Redis 方案只在升级路线里提
 
+## ✨核心贡献者
+- [牧小熊-项目负责人](https://github.com/muxiaoxiong)(Datawhale成员)
+
+## ❤️特别感谢
+
+- 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
+- 感谢内测组对本项目的帮助与支持
+     [Zeno](https://github.com/ZENO-CHOW)
+- 感谢所有为本项目做出贡献的开发者们 ❤️
+
+<div align="left">
+
+<a href="https://github.com/datawhalechina/mini-workbuddy/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=datawhalechina/mini-workbuddy&v=1" />
+</a>
+
+</div>
+
+
 ## 🧑‍💻 参与贡献
 
 - 发现错误或表述不清：提 Issue，附上章节号与实际看到的输出。
 - 想补充内容或修正代码：提 Pull Request，一章一个提交，便于逐章审阅。
-- 新增配图请遵循既有视觉规范：浅色底、1200 像素宽、源文件放 `assets/src/`，命名 `<章号>-<主题>.html`。
+- 新增配图请遵循既有视觉规范：浅色底、1200 像素宽、源文件放 `assets/src/`，命名 `<章号>-<主题>`。
 
 ## 📄 许可
 
