@@ -4,7 +4,7 @@
 
 <div align="center">
     📚 在线阅读：
-    <a href="https://datawhalechina.github.io/mini-workbuddy/" target="_blank" style="text-decoration: none; color: #007bff; margin: 0 5px;"><strong>GitHub Pages</strong></a> |
+    <a href="https://datawhalechina.github.io/mini-workbuddy/" target="_blank" style="text-decoration: none; color: #007bff; margin: 0 5px;"><strong>GitHub Pages</strong></a> 
 </div>
 
 ## 🚀 前言
