@@ -14,7 +14,7 @@ hero:
       link: /01-我们究竟要造什么
     - theme: alt
       text: 看源码
-      link: https://github.com/muxiaoxiong/mini-workbuddy
+      link: https://github.com/datawhalechina/mini-workbuddy
 
 features:
   - title: 按产品讲，不按 API 讲
