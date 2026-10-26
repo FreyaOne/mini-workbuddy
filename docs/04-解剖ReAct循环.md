@@ -210,19 +210,25 @@ react_config=ReActConfig(
 )
 ```
 
+ReActConfig 一共五个字段：
+
 | 参数 | 默认值 | 作用 |
 |---|---|---|
 | `max_iters` | 50 | 最多多少轮推理-行动迭代 |
-| `structured_output_grace_iters` | 5 | 结构化输出失败时，额外给几次机会 |
+| `structured_output_grace_iters` | 5 | 超过 `max_iters` 后额外允许的轮数，专门用来产出结构化输出 |
 | `stop_on_reject` | `False` | 工具调用被拒绝时，是否立刻终止回复 |
+| `interruption_message` | `'I notice the interruption. How can I help you?'` | 被中断时补的那句话 |
+| `interruption_raise_cancelled_error` | `False` | 中断时是否抛 `CancelledError`，而不是正常收尾 |
 
 `max_iters` 默认 50，这个值比大多数人的直觉大得多。为什么？因为复杂任务确实需要转很多圈：读十个文件、改五处代码、跑三次测试，五十轮并不夸张。
 
 但它也是一个成本开关。**每一次循环都是一次 API 调用**，50 轮意味着最坏情况下 50 次请求。所以示例里把它压到 10——不是因为它不够用，而是因为你要先知道自己在花多少钱。
 
 > **撞上限之后会发生什么**
-> `finished_reason` 变成 `exceed_max_iters`。框架还会追加**一次**禁用工具的模型调用，要求它把已完成的工作总结出来。这次收尾调用只做一次，如果它仍然没有产出文本，回复才以空文本结束。
-> 这个细节很重要：它保证了"超时"不会给用户一个空白界面。
+> 不是立刻结束。`cur_iter` 到了 `max_iters`，框架先进入**宽限期**（`structured_output_grace_iters`，默认 5 轮）：这几轮里它给模型注入一条 `<system-reminder>`，并用 `tool_choice` 把可选工具限定成结构化输出工具，逼模型把结果吐出来。
+> 宽限期也烧完（`cur_iter >= max_iters + grace_iters`），才发 `EXCEED_MAX_ITERS` 事件、以 `finished_reason=exceed_max_iters` 收场。这个事件在 2.x 里已经标了 deprecated，只为向后兼容而保留，别拿它当主信号。
+> 还有一个更容易踩的点：**只要结束时 `cur_iter > max_iters`，`finished_reason` 就是 `exceed_max_iters`，哪怕模型已经写完了正文。** 所以别用 `finished_reason` 判断"有没有拿到内容"，那要看 `get_text_content()`。
+> 这个细节的价值在于：它保证"超时"不会给用户一个空白界面——宽限期里模型往往已经能把该说的说完。
 
 ## 4.6 三个常见错误
 

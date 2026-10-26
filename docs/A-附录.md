@@ -156,7 +156,7 @@ opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 | 类型 | 何时发出 | 业务字段 | 前端 |
 |---|---|---|---|
 | `REPLY_START` | 一轮回复开始 | `session_id, reply_id, name, role` | 新建一个助手气泡，记下 `reply_id` |
-| `REPLY_END` | 一轮回复结束（正常或被中断） | `session_id, reply_id, finished_reason, error` | 解锁输入框；`interrupted` 时插一条提示；`error` 非空时显示错误 |
+| `REPLY_END` | 一轮回复结束（正常、被中断或步数用尽） | `session_id, reply_id, finished_reason, error` | 解锁输入框；`interrupted` 插提示；`exceed_max_iters` 补一句"这一轮步数用完了"；`error` 非空时显示错误 |
 
 ### B.2 模型调用
 
@@ -210,7 +210,7 @@ opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 
 **`MODEL_CALL_END` 没有 `model_name`。** 它在配对的 `MODEL_CALL_START` 上，记账时要提前存。
 
-**`REPLY_END` 有三种结束方式。** `finished_reason` 为 `completed`、`interrupted`，或者 `error` 字段非空。前端三种都要处理，只处理第一种会导致出错时输入框永久锁死。
+**`REPLY_END` 有四种结束方式。** `finished_reason` 是 `ReplyFinishedReason` 枚举，取值 `completed` / `interrupted` / `exceed_max_iters` / `error`；另一个 `error` 字段（`ErrorInfo`）在失败时非空。两个要分开看——`exceed_max_iters` 时 `error` 是空的，光看它判不出来。前端四种都要给用户不同的说法：示例代码里 `REPLY_END` 一到就无条件解锁输入框，所以不会锁死，但如果只认 `completed`，用户就看不出"被中断"和"步数用尽"的区别。
 
 查字段比读文档快：
 
