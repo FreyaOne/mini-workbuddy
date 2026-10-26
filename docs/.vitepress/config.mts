@@ -21,7 +21,7 @@ export default defineConfig({
     nav: [
       { text: '开始学习', link: '/01-我们究竟要造什么' },
       { text: '附录', link: '/A-附录' },
-      { text: 'GitHub', link: 'https://github.com/muxiaoxiong/mini-workbuddy' },
+      { text: 'GitHub', link: 'https://github.com/datawhalechina/mini-workbuddy' },
     ],
 
     search: {
@@ -90,11 +90,11 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/muxiaoxiong/mini-workbuddy' }
+      { icon: 'github', link: 'https://github.com/datawhalechina/mini-workbuddy' }
     ],
 
     editLink: {
-      pattern: 'https://github.com/muxiaoxiong/mini-workbuddy/blob/main/docs/:path',
+      pattern: 'https://github.com/datawhalechina/mini-workbuddy/blob/main/docs/:path',
       text: '在 GitHub 上编辑此页'
     },
 
