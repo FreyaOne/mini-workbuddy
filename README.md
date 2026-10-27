@@ -120,8 +120,6 @@ npm run docs:build      # 产物在 docs/.vitepress/dist
 ## ❤️特别感谢
 
 - 感谢 [@Sm1les](https://github.com/Sm1les) 对本项目的帮助与支持
-- 感谢内测组对本项目的帮助与支持
-     [Zeno](https://github.com/ZENO-CHOW)
 - 感谢所有为本项目做出贡献的开发者们 ❤️
 
 <div align="left">
