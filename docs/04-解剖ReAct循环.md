@@ -172,25 +172,30 @@ async for event in agent.reply_stream(UserMsg(name="user", content=question)):
 >>> 你：现在几点？顺便数一下这句话有多少字：手写循环其实不复杂。
 ------------------------------------------------------------------------
        0ms  REPLY_START
-       2ms    MODEL_CALL_START
-    1830ms    MODEL_CALL_END          in=412 out=58
-    1832ms      TOOL_CALL_START       get_current_time
-    1834ms      TOOL_RESULT_END       success
-    1836ms      TOOL_CALL_START       count_text
-    1838ms      TOOL_RESULT_END       success
-    1840ms    MODEL_CALL_START
-    3021ms    MODEL_CALL_END          in=536 out=74
-现在是 2026-10-22 09:53:07，星期四。这句话共 13 个字符，其中中文 11 个字。
-    3023ms  REPLY_END                completed
+       1ms    MODEL_CALL_START
+     514ms      TOOL_CALL_START       get_current_time
+     706ms      TOOL_CALL_START       count_text
+     902ms    MODEL_CALL_END         in=422 out=62
+     924ms      TOOL_RESULT_END       success
+     924ms      TOOL_RESULT_END       success
+     926ms    MODEL_CALL_START
+    2197ms    MODEL_CALL_END         in=524 out=98
+
+- 现在时间：2026-10-27 11:44:40，星期二（工具返回）
+- "手写循环其实不复杂。"：共 10 个字符，其中中文 9 个字（含句号）
+
+    2198ms  REPLY_END              completed
 ------------------------------------------------------------------------
-模型调用 2 次｜工具调用 2 次｜token in=948 out=132｜总耗时 3023ms
+模型调用 2 次｜工具调用 2 次｜token in=946 out=160｜总耗时 2198ms
 ```
 
-> 上面的耗时和 token 数会因模型、网络而异；**结构**才是要注意的地方。
+> 上面的耗时和 token 数会因模型、网络而异；**结构**才是要注意的地方。打印器只留有信息量的几类事件，`TEXT_BLOCK_START`、`TOOL_CALL_END` 这类空壳和 `HINT_BLOCK` 这类框架注入的提示都不上时间线。
+
+这里有个反直觉的顺序值得停一下：**`MODEL_CALL_END` 比 `TOOL_RESULT_END` 早**。原因是模型一边生成一边就把"我要调哪两个工具"声明出来了（`TOOL_CALL_START` 在流里发出），等这段生成彻底结束才发 `MODEL_CALL_END`；而工具是拿到完整调用参数之后才真正执行的，结果自然排在后面。所以时间线上的时间戳顺序不等于因果顺序——读的时候按缩进层级看，别按行号看。
 
 看这张时间线，能读出三件事：
 
-**第一，模型调用是瓶颈。**两次调用占了三秒里的绝大部分，工具执行只花了 6 毫秒。这解释了为什么第 8 章的上下文压缩那么重要——省 token 就是省钱，省钱就是省时间。
+**第一，模型调用是瓶颈。** 两次调用占了 2.2 秒里的绝大部分，工具执行只花了 22 毫秒。这解释了为什么第 8 章的上下文压缩那么重要——省 token 就是省钱，省钱就是省时间。
 
 **第二，工具是并发的。**两个 `TOOL_CALL_START` 连着出现，没有等彼此。这就是 4.2 节说的"并发执行"。
 
