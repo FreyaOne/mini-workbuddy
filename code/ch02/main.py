@@ -7,6 +7,8 @@
 import asyncio
 # os：读取环境变量（API Key、Base URL、模型名）
 import os
+# sys：用于自定义 unraisablehook，过滤 httpcore 的清理噪音
+import sys
 
 # load_dotenv：把 .env 文件里的变量加载进 os.environ
 from dotenv import load_dotenv
@@ -27,6 +29,20 @@ load_dotenv(override=True)
 API_KEY = os.getenv("OPENAI_API_KEY", "")  # 必填：模型服务的密钥
 BASE_URL = os.getenv("OPENAI_BASE_URL", "")  # 可选：自定义网关/代理地址
 MODEL_NAME = os.getenv("OPENAI_MODEL", "")  # 模型名称
+
+
+# ---------- 过滤 httpcore 异步生成器清理噪音 ----------
+# 这段代码忽略，主要是兼容不同的python版本，无实际意义
+def _silence_httpcore_asyncgen_error(unraisable):
+    """只忽略 httpcore 在异步生成器终结时抛出的已知噪音，其余照常打印。"""
+    exc = unraisable.exc_value
+    if isinstance(exc, RuntimeError) and "generator didn't stop after athrow()" in str(exc):
+        return  # 静默忽略这条已知噪音
+    sys.__unraisablehook__(unraisable)  # 其他不可用异常按默认方式报告
+
+
+sys.unraisablehook = _silence_httpcore_asyncgen_error
+# -------------------------------------------------------
 
 
 def build_model() -> OpenAIChatModel:
@@ -67,17 +83,23 @@ async def main() -> None:
     print("事件流开始")
     print("=" * 62)
 
-    # reply_stream 是异步生成器：模型吐出一点，我们就能看到一点
+    # 先拿到异步生成器对象，便于在 finally 里显式关闭
+    stream = agent.reply_stream(
+        UserMsg(name="user", content="用一句话说明什么是异步编程"),
+    )
+
     # 注意：enumerate 只认同步可迭代对象，异步生成器要自己数
     i = 0
-    # async for：逐个消费 Agent 产出的事件（文本增量、工具调用、结束原因等）
-    async for event in agent.reply_stream(
-        UserMsg(name="user", content="用一句话说明什么是异步编程"),
-    ):
-        kind = event.type.value  # 事件的种类，字符串
-        # i 是序号，kind 左对齐占 22 列，describe 给出该事件的关键信息
-        print(f"[{i:02d}] {kind:<22} {describe(event)}")
-        i += 1  # 异步生成器不能配 enumerate，手动递增
+    try:
+        # async for：逐个消费 Agent 产出的事件（文本增量、工具调用、结束原因等）
+        async for event in stream:
+            kind = event.type.value  # 事件的种类，字符串
+            # i 是序号，kind 左对齐占 22 列，describe 给出该事件的关键信息
+            print(f"[{i:02d}] {kind:<22} {describe(event)}")
+            i += 1  # 异步生成器不能配 enumerate，手动递增
+    finally:
+        # 显式关闭异步生成器：让底层 HTTP 流按正确路径收尾，避免 GC 时跨任务清理报错
+        await stream.aclose()
 
     print("=" * 62)
     print("事件流结束")
