@@ -101,14 +101,6 @@ npm run docs:dev        # http://localhost:5173/mini-workbuddy/
 npm run docs:build      # 产物在 docs/.vitepress/dist
 ```
 
-
-设计原则：
-
-1. 第 1–10 章每章一个**单文件**，`python main.py` 直接跑
-2. 第 11 章之后才拆包，因为前端必须和后端一起跑
-3. 每章代码顶部三行注释写清"比上一章多了什么"
-4. 主线不引入数据库与 Redis：第 9 章用 JSON 文件，Redis 方案只在升级路线里提
-
 ## 🗺 后续计划
 
 | 计划 | 内容 | 状态 |
@@ -127,7 +119,7 @@ npm run docs:build      # 产物在 docs/.vitepress/dist
 <div align="left">
 
 <a href="https://github.com/datawhalechina/mini-workbuddy/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=datawhalechina/mini-workbuddy&v=1" />
+  <img src="https://contrib.rocks/image?repo=datawhalechina/mini-workbuddy&v=2" />
 </a>
 
 </div>
